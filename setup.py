@@ -5,11 +5,11 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="sentry-10-dingding",
+    name="sentry-dingding-kk",
     version='1.0.0',
-    author='season',
-    author_email='season2991@gmail.com',
-    url='https://github.com/cench/sentry-10-dingding',
+    author='wj',
+    author_email='halamadrid050639@gmail.com',
+    url='https://github.com/WJdamnmark/sentry-dingding-kk',
     description='A Sentry extension which send errors stats to DingDing',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -29,7 +29,7 @@ setup(
         ]
     },
     classifiers=[
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
         "License :: OSI Approved :: MIT License",
     ]
 )

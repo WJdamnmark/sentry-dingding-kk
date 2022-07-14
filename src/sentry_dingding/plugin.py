@@ -1,14 +1,18 @@
 # coding: utf-8
 
 import json
-
+import time
+import hmac
+import hashlib
+import base64
+import urllib.parse
 import requests
 from sentry.plugins.bases.notify import NotificationPlugin
 
 import sentry_dingding
 from .forms import DingDingOptionsForm
 
-DingTalk_API = "https://oapi.dingtalk.com/robot/send?access_token={token}"
+DingTalk_API = "https://oapi.dingtalk.com/robot/send?access_token={token}&timestamp={timestamp}&sign={sign}"
 
 
 class DingDingPlugin(NotificationPlugin):
@@ -51,7 +55,14 @@ class DingDingPlugin(NotificationPlugin):
             return
 
         access_token = self.get_option('access_token', group.project)
-        send_url = DingTalk_API.format(token=access_token)
+        secret_key = self.get_option('secret_key', group.project)
+        secret_enc = secret_key.encode('utf-8')
+        timestamp = str(round(time.time() * 1000))
+        string_to_sign = '{}\n{}'.format(timestamp, secret_key)
+        string_to_sign_enc = string_to_sign.encode('utf-8')
+        hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
+        sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+        send_url = DingTalk_API.format(token=access_token, timestamp=timestamp, sign=sign)
         title = u'【%s】的项目异常' % event.project.slug
 
         data = {
