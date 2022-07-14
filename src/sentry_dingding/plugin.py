@@ -5,7 +5,7 @@ import time
 import hmac
 import hashlib
 import base64
-import urllib.parse
+import urllib
 import requests
 from sentry.plugins.bases.notify import NotificationPlugin
 
@@ -61,7 +61,7 @@ class DingDingPlugin(NotificationPlugin):
         string_to_sign = '{}\n{}'.format(timestamp, secret_key)
         string_to_sign_enc = string_to_sign.encode('utf-8')
         hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
-        sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+        sign = urllib.quote_plus(base64.b64encode(hmac_code))
         send_url = DingTalk_API.format(token=access_token, timestamp=timestamp, sign=sign)
         title = u'【%s】的项目异常' % event.project.slug
 
